@@ -106,7 +106,7 @@ def export_to_json(filename_template, generation, data):
     print('\tWriting data to JSON file %s' % filename)
 
     with open(filename, 'w') as file:
-        json.dump(data, file)
+        json.dump(data, file, indent=2)
 
 
 ###############################################################################
