@@ -45,15 +45,18 @@ def parse_html(generation, html):
     for line in lines:
         line = line.strip()
 
-        # Only interested in lines of this format:
-        #    <img alt="bulbasaur.gif" src="https://projectpokemon.org/images/normal-sprite/bulbasaur.gif">
+        # Only interested in lines of these format:
+        #   <img alt="bulbasaur.gif" src="https://projectpokemon.org/images/normal-sprite/bulbasaur.gif">
+        #   <img align="middle" alt=" " src="https://projectpokemon.org/images/sprites-models/swsh-normal-sprites/grookey.gif">
 
-        if line.startswith('<img alt=') and 'src="https://projectpokemon.org/images/' in line and line.endswith('.gif">'):
+        if line.startswith('<img') and 'src="https://projectpokemon.org/images/' in line and line.endswith('.gif">'):
             datum = {}
 
             datum['generation'] = generation
 
-            if '/images/sprites-models/' in line:
+            if '/images/sprites-models/swsh-' in line:
+                pokemon_name = line.split('-sprites/')[1].split('.gif')[0]
+            elif '/images/sprites-models/' in line:
                 pokemon_name = line.split('<img alt="')[1].split('.gif')[0]
             else:
                 pokemon_name = line.split('-sprite/')[1].split('.gif')[0]
@@ -70,8 +73,11 @@ def parse_html(generation, html):
             if 'swsh-' in line:
                 sprite_type = line.split('https://projectpokemon.org/images/sprites-models/swsh-')[1].split('-sprites/')[0]
                 datum['sprite_type'] = sprite_type.capitalize()
+            elif 'sprites-models' in line:
+                datum['sprite_type'] = line.split('/sprites-models/')[1].split('-back')[0].capitalize()
             else:
                 sprite_type = line.split('https://projectpokemon.org/images/')[1].split('-sprite/')[0]
+                datum['sprite_type'] = sprite_type.capitalize()
 
             datum['sprite_url'] = line.split('src="')[1].split('">')[0]
 
