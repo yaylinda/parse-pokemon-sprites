@@ -64,7 +64,7 @@ def parse_html(generation, html):
             pokemon_name_split = pokemon_name.split('-')
 
             if len(pokemon_name_split) > 1:
-                datum['pokemon_variant'] = ' '.join([x.capitalize() for x in pokemon_name_split[:-1]])
+                datum['pokemon_variant'] = ' '.join([x.capitalize() for x in pokemon_name_split[1:]])
             else:
                 datum['pokemon_variant'] = 'None'
 
