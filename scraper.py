@@ -10,7 +10,14 @@ import requests
 # key   -> pokemon generation number
 # value -> projectpokemon sprite page for that gen
 SPRITE_PAGES = {
-    '1': 'https://projectpokemon.org/docs/spriteindex_148/3d-models-generation-1-pok%C3%A9mon-r90/'
+    '1': 'https://projectpokemon.org/docs/spriteindex_148/3d-models-generation-1-pok%C3%A9mon-r90/',
+    '2': 'https://projectpokemon.org/docs/spriteindex_148/3d-models-generation-2-pok%C3%A9mon-r91/',
+    '3': 'https://projectpokemon.org/docs/spriteindex_148/3d-models-generation-3-pok%C3%A9mon-r92/',
+    '4': 'https://projectpokemon.org/docs/spriteindex_148/3d-models-generation-4-pok%C3%A9mon-r93/',
+    '5': 'https://projectpokemon.org/docs/spriteindex_148/3d-models-generation-5-pok%C3%A9mon-r94/',
+    '6': 'https://projectpokemon.org/docs/spriteindex_148/3d-models-generation-6-pok%C3%A9mon-r95/',
+    '7': 'https://projectpokemon.org/docs/spriteindex_148/3d-models-generation-7-pok%C3%A9mon-r96/',
+    '8': 'https://projectpokemon.org/docs/spriteindex_148/3d-models-generation-8-pok%C3%A9mon-r123/',
 }
 
 # For results directories
@@ -40,8 +47,8 @@ def parse_html(generation, html):
 
         # Only interested in lines of this format:
         #    <img alt="bulbasaur.gif" src="https://projectpokemon.org/images/normal-sprite/bulbasaur.gif">
-        if line.startswith('<img alt=') and 'src="https://projectpokemon.org/images/' in line and line.endswith('.gif">'):
 
+        if line.startswith('<img alt=') and 'src="https://projectpokemon.org/images/' in line and line.endswith('.gif">'):
             datum = {}
 
             datum['generation'] = generation
@@ -60,10 +67,13 @@ def parse_html(generation, html):
 
             datum['pokemon_name'] = pokemon_name_split[0].capitalize()
 
-            sprite_type = line.split('https://projectpokemon.org/images/')[1].split('-sprite/')[0]
-            datum['sprite_type'] = sprite_type.capitalize()
+            if 'swsh-' in line:
+                sprite_type = line.split('https://projectpokemon.org/images/sprites-models/swsh-')[1].split('-sprites/')[0]
+                datum['sprite_type'] = sprite_type.capitalize()
+            else:
+                sprite_type = line.split('https://projectpokemon.org/images/')[1].split('-sprite/')[0]
 
-            datum['sprite_url'] = line.split('.gif" src="')[1].split('">')[0]
+            datum['sprite_url'] = line.split('src="')[1].split('">')[0]
 
             data.append(datum)
 
